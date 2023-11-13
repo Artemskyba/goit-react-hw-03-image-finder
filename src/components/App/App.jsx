@@ -1,9 +1,11 @@
 import { Component } from 'react';
-import { SearchForm } from './searchbar/searchbar';
-import { fetchImages } from './api';
-import { ImageGallery } from './image-gallery/image-gallery';
-import { Button } from './load-more-button/button';
+import { SearchForm } from '../searchbar/searchbar';
+import { fetchImages } from '../api';
+import { ImageGallery } from '../image-gallery/image-gallery';
+import { Button } from '../load-more-button/button';
 import { LineWave } from 'react-loader-spinner';
+import { GlobalStyle } from '../global-styles';
+import { AppContainer, Loader } from './App.styled';
 
 export class App extends Component {
   state = {
@@ -27,7 +29,9 @@ export class App extends Component {
         });
       } catch (error) {
       } finally {
-        this.setState({ isLoading: false });
+        this.setState({
+          isLoading: false,
+        });
       }
     }
   }
@@ -41,21 +45,27 @@ export class App extends Component {
   };
 
   changePage = () => {
-    this.setState(prevState => {
-      return { page: prevState.page + 1 };
-    });
+    this.setState(prevState => ({
+      page: prevState.page + 1,
+      loadMore: false,
+    }));
   };
 
   render() {
     const { images, loadMore, isLoading } = this.state;
 
     return (
-      <>
+      <AppContainer>
         <SearchForm onSubmit={this.handleSubmit} />
         <ImageGallery images={images} />
-        {isLoading && <LineWave></LineWave>}
+        {isLoading && (
+          <Loader>
+            <LineWave width="250" height="250" />
+          </Loader>
+        )}
         {loadMore && <Button loadMore={this.changePage} />}
-      </>
+        <GlobalStyle />
+      </AppContainer>
     );
   }
 }

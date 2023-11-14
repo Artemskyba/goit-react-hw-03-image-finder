@@ -18,7 +18,10 @@ export class App extends Component {
 
   async componentDidUpdate(prevProps, prevState) {
     const { images, query, page } = this.state;
-    if (prevState.query !== query || prevState.page !== page) {
+    if (
+      (prevState.query !== query || prevState.page !== page) &&
+      query.split('/')[1].trim().length > 0
+    ) {
       try {
         this.setState({ isLoading: true });
         const fetchedImages = await fetchImages(query.split('/')[1], page);
